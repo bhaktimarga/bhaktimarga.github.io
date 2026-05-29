@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog – Bhakti Marga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --deep: #0d0a05;
+      --warm-dark: #1a1208;
+      --cream: #f5efe4;
+      --text-light: #d4c9b0;
+      --text-muted: #8a7d65;
+      --saffron: #e07b39;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Raleway', sans-serif; background: var(--deep); color: var(--cream); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,10,5,0.97);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .nav-logo img { height: 52px; object-fit: contain; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.18em;
+      color: var(--text-light); text-decoration: none; text-transform: uppercase;
+      transition: color 0.3s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: var(--gold); transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      height: 58vh; min-height: 400px; position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0;
+      background: url('Picture4.jpg') center 40%/cover no-repeat;
+      filter: brightness(0.25);
+    }
+    .page-hero-content { position: relative; z-index: 2; text-align: center; animation: fadeUp 1s both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    .page-eyebrow {
+      font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.4em;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 16px;
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 6vw, 82px); font-weight: 300;
+      color: var(--cream); line-height: 1.1;
+    }
+    .page-title em { font-style: italic; color: var(--gold-light); }
+    .page-subtitle {
+      font-size: 15px; font-weight: 300; color: var(--text-light);
+      margin-top: 18px; letter-spacing: 0.06em;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.08);
+      background: var(--warm-dark);
+    }
+    .breadcrumb span { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.2em; color: var(--text-muted); }
+    .breadcrumb a { color: var(--gold); text-decoration: none; }
+
+    /* ── FILTER TABS ── */
+    .filter-bar {
+      padding: 40px 60px 0;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .filter-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.3em; color: var(--text-muted); margin-right: 8px; }
+    .filter-btn {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 9px 22px;
+      background: transparent; color: var(--text-muted);
+      border: 1px solid rgba(201,168,76,0.18); cursor: pointer;
+      transition: all 0.3s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(201,168,76,0.08); border-color: var(--gold); color: var(--gold);
+    }
+
+    /* ── FEATURED POST ── */
+    .featured-wrap { padding: 50px 60px 20px; }
+    .featured-card {
+      display: grid; grid-template-columns: 1fr 1fr;
+      background: var(--warm-dark);
+      overflow: hidden; position: relative;
+      transition: transform 0.4s;
+      cursor: pointer;
+    }
+    .featured-card:hover { transform: translateY(-4px); }
+    .featured-img { position: relative; min-height: 420px; overflow: hidden; }
+    .featured-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
+    .featured-card:hover .featured-img img { transform: scale(1.05); }
+    .featured-badge {
+      position: absolute; top: 24px; left: 24px;
+      font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.28em;
+      background: var(--gold); color: var(--deep); padding: 6px 16px;
+      text-transform: uppercase;
+    }
+    .featured-body {
+      padding: 56px 52px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .post-cat {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.3em;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 18px;
+    }
+    .post-title {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(28px,3vw,44px);
+      font-weight: 300; line-height: 1.25; color: var(--cream); margin-bottom: 20px;
+    }
+    .post-title em { font-style: italic; color: var(--gold-light); }
+    .post-excerpt { font-size: 14px; font-weight: 300; line-height: 1.9; color: var(--text-muted); margin-bottom: 32px; }
+    .post-meta { display: flex; align-items: center; gap: 18px; margin-bottom: 32px; }
+    .meta-author { font-size: 12px; font-weight: 500; color: var(--text-light); }
+    .meta-sep { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; }
+    .meta-date { font-size: 12px; color: var(--text-muted); }
+    .meta-read { font-size: 11px; color: var(--text-muted); font-style: italic; }
+    .read-link {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid rgba(201,168,76,0.3); padding-bottom: 4px;
+      transition: gap 0.3s, border-color 0.3s;
+      width: fit-content;
+    }
+    .read-link:hover { gap: 16px; border-color: var(--gold); }
+
+    /* ── BLOG GRID ── */
+    .blog-grid-section { padding: 50px 60px 100px; }
+    .grid-label {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.35em;
+      color: var(--text-muted); text-transform: uppercase;
+      margin-bottom: 36px; padding-bottom: 20px;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .blog-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 3px;
+    }
+    .blog-card {
+      background: var(--warm-dark); overflow: hidden;
+      cursor: pointer; transition: transform 0.35s;
+      display: flex; flex-direction: column;
+    }
+    .blog-card:hover { transform: translateY(-5px); }
+    .card-img { position: relative; height: 220px; overflow: hidden; }
+    .card-img img { width:100%; height:100%; object-fit: cover; transition: transform 0.7s ease; }
+    .blog-card:hover .card-img img { transform: scale(1.07); }
+    .card-cat-tag {
+      position: absolute; bottom: 14px; left: 14px;
+      font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.22em;
+      background: rgba(13,10,5,0.85); color: var(--gold); padding: 5px 12px;
+      border: 1px solid rgba(201,168,76,0.3);
+    }
+    .card-body { padding: 30px 28px 36px; flex: 1; display: flex; flex-direction: column; }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 22px;
+      font-weight: 400; line-height: 1.3; color: var(--cream);
+      margin-bottom: 14px; flex: 1;
+    }
+    .card-excerpt { font-size: 13px; font-weight: 300; line-height: 1.8; color: var(--text-muted); margin-bottom: 24px; }
+    .card-meta { display: flex; justify-content: space-between; align-items: center; }
+    .card-date { font-size: 11px; color: var(--text-muted); }
+    .card-arrow {
+      width: 32px; height: 32px; border: 1px solid rgba(201,168,76,0.25);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 14px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .blog-card:hover .card-arrow { background: rgba(201,168,76,0.12); border-color: var(--gold); }
+
+    /* ── FULL ARTICLE MODAL ── */
+    .article-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(13,10,5,0.96);
+      overflow-y: auto;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .article-overlay.open { opacity: 1; pointer-events: all; }
+    .article-container {
+      max-width: 780px; margin: 0 auto;
+      padding: 100px 40px 120px;
+      transform: translateY(30px);
+      transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+    }
+    .article-overlay.open .article-container { transform: translateY(0); }
+    .article-close {
+      position: fixed; top: 28px; right: 40px;
+      font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.22em;
+      color: var(--text-muted); cursor: pointer; background: none; border: none;
+      display: flex; align-items: center; gap: 8px; transition: color 0.3s;
+    }
+    .article-close:hover { color: var(--gold); }
+    .article-cat { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.35em; color: var(--gold); margin-bottom: 20px; }
+    .article-title {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,58px);
+      font-weight: 300; line-height: 1.15; color: var(--cream); margin-bottom: 24px;
+    }
+    .article-title em { font-style: italic; color: var(--gold-light); }
+    .article-meta { display: flex; gap: 16px; align-items: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid rgba(201,168,76,0.15); }
+    .article-meta span { font-size: 12px; color: var(--text-muted); }
+    .article-meta .sep { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; }
+    .article-hero-img { width: 100%; height: 380px; object-fit: cover; margin-bottom: 48px; }
+    .article-body { font-size: 16px; font-weight: 300; line-height: 2; color: var(--text-light); }
+    .article-body p { margin-bottom: 24px; }
+    .article-body h3 {
+      font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;
+      color: var(--cream); margin: 48px 0 20px; line-height: 1.3;
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--gold); padding: 20px 30px;
+      margin: 36px 0; background: rgba(201,168,76,0.04);
+      font-family: 'Cormorant Garamond', serif; font-size: 22px;
+      font-style: italic; color: var(--cream); line-height: 1.6;
+    }
+
+    /* ── SIDEBAR / TOPICS ── */
+    .topics-band { background: var(--warm-dark); padding: 70px 60px; }
+    .topics-inner { max-width: 1200px; margin: 0 auto; }
+    .topics-head { margin-bottom: 40px; }
+    .topics-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+    .topic-chip {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.2em;
+      padding: 10px 24px; border: 1px solid rgba(201,168,76,0.2);
+      color: var(--text-muted); cursor: pointer; transition: all 0.3s;
+    }
+    .topic-chip:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
+
+    /* ── NEWSLETTER ── */
+    .newsletter {
+      padding: 100px 60px; text-align: center;
+      background: linear-gradient(135deg, var(--warm-dark) 0%, var(--deep) 100%);
+      position: relative; overflow: hidden;
+    }
+    .newsletter::before {
+      content: 'ॐ'; position: absolute; font-size: 300px;
+      color: rgba(201,168,76,0.03); top: -60px; left: 50%; transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif; user-select: none;
+    }
+    .newsletter-inner { max-width: 560px; margin: 0 auto; position: relative; }
+    .nl-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.4em; color: var(--gold); margin-bottom: 16px; }
+    .nl-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px,4vw,52px); font-weight: 300; color: var(--cream); margin-bottom: 16px; line-height: 1.2; }
+    .nl-title em { font-style: italic; color: var(--gold-light); }
+    .nl-sub { font-size: 14px; font-weight: 300; color: var(--text-muted); line-height: 1.8; margin-bottom: 36px; }
+    .nl-form { display: flex; gap: 0; max-width: 460px; margin: 0 auto; }
+    .nl-input {
+      flex: 1; padding: 16px 22px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.25); border-right: none;
+      color: var(--cream); font-family: 'Raleway', sans-serif; font-size: 13px;
+      outline: none; transition: border-color 0.3s;
+    }
+    .nl-input::placeholder { color: var(--text-muted); }
+    .nl-input:focus { border-color: var(--gold); }
+    .nl-btn {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.2em;
+      padding: 16px 28px; background: var(--gold); color: var(--deep);
+      border: none; cursor: pointer; transition: background 0.3s;
+    }
+    .nl-btn:hover { background: var(--gold-light); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: #080603; padding: 80px 60px 40px; position: relative; overflow: hidden; }
+    footer::before {
+      content: 'ॐ'; position: absolute; font-size: 400px;
+      color: rgba(201,168,76,0.025); top: -80px; right: -60px;
+      font-family: 'Cormorant Garamond', serif; user-select: none;
+      animation: omRotate 60s linear infinite;
+    }
+    @keyframes omRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; position: relative; }
+    .footer-brand img { height: 56px; object-fit: contain; margin-bottom: 22px; }
+    .footer-brand p { font-size: 13px; font-weight: 300; line-height: 1.9; color: var(--text-muted); max-width: 280px; }
+    .footer-col h4 { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; margin-bottom: 24px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 12px; }
+    .footer-col a { font-size: 13px; font-weight: 300; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-socials { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .social-icon { width: 40px; height: 40px; border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); transition: all 0.3s; }
+    .social-icon:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); transform: translateY(-3px); }
+    .footer-bottom { border-top: 1px solid rgba(201,168,76,0.1); padding-top: 30px; display: flex; align-items: center; justify-content: space-between; position: relative; }
+    .footer-bottom p { font-size: 12px; color: var(--text-muted); }
+    .footer-links { display: flex; gap: 28px; }
+    .footer-links a { font-size: 11px; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .breadcrumb { padding: 14px 24px; }
+      .filter-bar { padding: 30px 24px 0; }
+      .featured-wrap { padding: 30px 24px 10px; }
+      .featured-card { grid-template-columns: 1fr; }
+      .featured-img { min-height: 260px; }
+      .featured-body { padding: 36px 28px; }
+      .blog-grid-section { padding: 30px 24px 80px; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .topics-band { padding: 60px 24px; }
+      .newsletter { padding: 70px 24px; }
+      .nl-form { flex-direction: column; }
+      .nl-input { border-right: 1px solid rgba(201,168,76,0.25); border-bottom: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+      .article-container { padding: 80px 24px 100px; }
+      .article-close { right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="Bhakti Marga Logo.jpg" alt="Bhakti Marga" /></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-content">
+      <p class="page-eyebrow">Wisdom &amp; Inspiration</p>
+      <h1 class="page-title">The <em>Bhakti</em> Blog</h1>
+      <p class="page-subtitle">Stories, teachings, and reflections from the path of devotion</p>
+    </div>
+  </div>
+
+  <div class="breadcrumb">
+    <span><a href="index.html">Home</a> &nbsp;/&nbsp; Blog</span>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-bar reveal">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="filterPosts('all', this)">All</button>
+    <button class="filter-btn" onclick="filterPosts('devotion', this)">Devotion</button>
+    <button class="filter-btn" onclick="filterPosts('yoga', this)">Yoga &amp; Meditation</button>
+    <button class="filter-btn" onclick="filterPosts('wisdom', this)">Wisdom</button>
+    <button class="filter-btn" onclick="filterPosts('community', this)">Community</button>
+    <button class="filter-btn" onclick="filterPosts('festivals', this)">Festivals</button>
+  </div>
+
+  <!-- FEATURED POST -->
+  <div class="featured-wrap reveal">
+    <div class="featured-card" onclick="openArticle('featured')">
+      <div class="featured-img">
+        <img src="Picture5.jpg" alt="The Power of Devotion" />
+        <span class="featured-badge">✦ Featured</span>
+      </div>
+      <div class="featured-body">
+        <p class="post-cat">Devotion</p>
+        <h2 class="post-title">Why <em>Bhakti</em> Is the Shortest Path to the Divine</h2>
+        <div class="post-meta">
+          <span class="meta-author">Bhakti Marga Editorial</span>
+          <span class="meta-sep"></span>
+          <span class="meta-date">May 15, 2026</span>
+          <span class="meta-sep"></span>
+          <span class="meta-read">8 min read</span>
+        </div>
+        <p class="post-excerpt">Among all the paths described in the ancient scriptures — karma yoga, jnana yoga, raja yoga — the sages have called Bhakti the most direct, the most accessible, and the most joyful. But what makes devotion so powerful? And how do we cultivate it in modern life?</p>
+        <a href="#" class="read-link" onclick="event.stopPropagation(); openArticle('featured')">Read Full Article &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOG GRID -->
+  <div class="blog-grid-section">
+    <p class="grid-label">Latest Articles</p>
+    <div class="blog-grid" id="blogGrid">
+
+      <div class="blog-card reveal" data-cat="yoga" onclick="openArticle('yoga1')">
+        <div class="card-img">
+          <img src="Picture6.jpg" alt="Morning Sadhana" />
+          <span class="card-cat-tag">Yoga &amp; Meditation</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">How a Daily Sadhana Practice Can Transform Your Life</h3>
+          <p class="card-excerpt">Early mornings carry a unique silence — the sandhya, the sacred junction between night and day. Discover how a consistent morning practice opens the heart to grace.</p>
+          <div class="card-meta">
+            <span class="card-date">May 8, 2026</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card reveal" data-cat="wisdom" onclick="openArticle('wisdom1')">
+        <div class="card-img">
+          <img src="Picture3.jpg" alt="Bhagavad Gita" />
+          <span class="card-cat-tag">Wisdom</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Five Timeless Lessons from the Bhagavad Gita</h3>
+          <p class="card-excerpt">Spoken on a battlefield over 5,000 years ago, Lord Krishna's words to Arjuna speak with startling relevance to every challenge we face today.</p>
+          <div class="card-meta">
+            <span class="card-date">April 28, 2026</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card reveal" data-cat="community" onclick="openArticle('community1')">
+        <div class="card-img">
+          <img src="Picture2.jpg" alt="Satsang Community" />
+          <span class="card-cat-tag">Community</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">The Gift of Satsang: Why Spiritual Community Matters</h3>
+          <p class="card-excerpt">The company of like-minded seekers is not a luxury on the spiritual path — it is a necessity. Learn why satsang (sacred community) is considered one of the greatest blessings.</p>
+          <div class="card-meta">
+            <span class="card-date">April 17, 2026</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card reveal" data-cat="devotion" onclick="openArticle('devotion2')">
+        <div class="card-img">
+          <img src="Picture1.jpg" alt="Kirtan" />
+          <span class="card-cat-tag">Devotion</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Kirtan: The Ancient Sound that Heals the Modern Soul</h3>
+          <p class="card-excerpt">Science is now catching up to what sages have known for millennia: sacred chanting rewires the nervous system, quiets the mind, and opens the heart to joy.</p>
+          <div class="card-meta">
+            <span class="card-date">April 5, 2026</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card reveal" data-cat="festivals" onclick="openArticle('festivals1')">
+        <div class="card-img">
+          <img src="Picture4.jpg" alt="Just Love Festival" />
+          <span class="card-cat-tag">Festivals</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Just Love Festival 2026: A Preview of What's Coming</h3>
+          <p class="card-excerpt">This summer's Just Love Festival at Shree Peetha Nilaya promises to be the most expansive yet — three days of kirtan, yoga, retreats, fire ceremonies, and pure devotion.</p>
+          <div class="card-meta">
+            <span class="card-date">March 22, 2026</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card reveal" data-cat="yoga" onclick="openArticle('yoga2')">
+        <div class="card-img">
+          <img src="Picture5.jpg" alt="Atma Kriya Yoga" />
+          <span class="card-cat-tag">Yoga &amp; Meditation</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Atma Kriya Yoga: The Science of Self-Realisation</h3>
+          <p class="card-excerpt">A complete yoga system given by Paramahamsa Vishwananda, Atma Kriya integrates pranayama, meditation, and mantra into a daily practice that accelerates spiritual awakening.</p>
+          <div class="card-meta">
+            <span class="card-date">March 10, 2026</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOPICS -->
+  <div class="topics-band">
+    <div class="topics-inner">
+      <div class="topics-head reveal">
+        <p style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.4em;color:var(--gold);margin-bottom:12px;">Explore Topics</p>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:300;color:var(--cream);">What Moves <em style="font-style:italic;color:var(--gold-light);">Your Soul?</em></h2>
+      </div>
+      <div class="topics-grid">
+        <span class="topic-chip">Devotion &amp; Bhakti</span>
+        <span class="topic-chip">Yoga &amp; Meditation</span>
+        <span class="topic-chip">Sacred Knowledge</span>
+        <span class="topic-chip">Kirtan &amp; Music</span>
+        <span class="topic-chip">Rituals &amp; Puja</span>
+        <span class="topic-chip">Ayurveda &amp; Wellness</span>
+        <span class="topic-chip">Satsang Stories</span>
+        <span class="topic-chip">Events &amp; Festivals</span>
+        <span class="topic-chip">Seva &amp; Service</span>
+        <span class="topic-chip">Bhagavad Gita</span>
+        <span class="topic-chip">Living Spiritually</span>
+        <span class="topic-chip">Ashram Life</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter">
+    <div class="newsletter-inner reveal">
+      <p class="nl-label">Stay Inspired</p>
+      <h2 class="nl-title">Wisdom in Your <em>Inbox</em></h2>
+      <p class="nl-sub">Receive our latest articles, teachings, and upcoming event announcements — delivered with love, never with spam.</p>
+      <div class="nl-form">
+        <input type="email" class="nl-input" placeholder="Your email address…" />
+        <button class="nl-btn">Subscribe</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="Bhakti Marga Logo.jpg" alt="Bhakti Marga" />
+        <p>A global spiritual movement founded on love, devotion, and the timeless teachings of Paramahamsa Vishwananda.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/bhaktimarga_deutschland/" target="_blank" class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://www.facebook.com/bhaktimarga108" target="_blank" class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://x.com/BhaktiMarga108" target="_blank" class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@BhaktiMarga1008" target="_blank" class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+          </a>
+          <a href="https://de.linkedin.com/company/bhakti-marga-foundation" target="_blank" class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://de.pinterest.com/bhaktimargaevents/" target="_blank" class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.852 0 1.266.64 1.266 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.772 0 3.135-1.868 3.135-4.563 0-2.386-1.715-4.052-4.163-4.052-2.837 0-4.5 2.127-4.5 4.326 0 .856.33 1.775.741 2.277a.3.3 0 0 1 .069.286c-.076.311-.244.995-.277 1.134-.044.183-.146.222-.337.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.967-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.938.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+          </a>
+          <a href="https://en.wikipedia.org/wiki/Bhakti_Marga_(organisation)" target="_blank" class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#">Devotion</a></li>
+          <li><a href="#">Yoga &amp; Meditation</a></li>
+          <li><a href="#">Wisdom</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Festivals</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="contact.html">Get in Touch</a></li>
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="https://www.bhaktimarga.org/" target="_blank">Main Website</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Bhakti Marga. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Impressum</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ARTICLE MODAL -->
+  <div class="article-overlay" id="articleOverlay">
+    <button class="article-close" onclick="closeArticle()">✕ &nbsp;Close</button>
+    <div class="article-container" id="articleContent"></div>
+  </div>
+
+  <script>
+    /* ── ARTICLES DATA ── */
+    const articles = {
+      featured: {
+        cat: 'Devotion',
+        title: 'Why Bhakti Is the Shortest Path to the Divine',
+        author: 'Bhakti Marga Editorial', date: 'May 15, 2026', read: '8 min read',
+        img: 'Picture5.jpg',
+        body: `
+          <p>Among all the spiritual paths described in the Vedic tradition — karma yoga (the path of action), jnana yoga (the path of knowledge), and raja yoga (the path of mental mastery) — the ancient sages have consistently elevated Bhakti as the most direct, the most accessible, and the most joyful path to God-realisation.</p>
+          <p>But what makes devotion so uniquely powerful? And how do we cultivate genuine Bhakti in the middle of modern, busy, distracted lives?</p>
+
+          <h3>The Nature of Bhakti</h3>
+          <p>Bhakti is not mere emotion. It is not sentiment, or blind belief, or religious ritual performed out of habit. Bhakti, at its deepest, is the orientation of the entire being — mind, heart, will, and action — toward the Divine. It is a love that does not waver with circumstance, a longing that does not dissolve when prayer seems unanswered.</p>
+          <p>The Narada Bhakti Sutras, one of the primary scriptural texts on devotion, describe Bhakti as <em>parama prema rupa</em> — of the very nature of supreme love. Not love as the world understands it — conditional, contractual, transient — but love as the fundamental nature of the Self.</p>
+
+          <blockquote>"When the heart is full of devotion, it needs no other practice. All yoga is already accomplished." — Paramahamsa Vishwananda</blockquote>
+
+          <h3>Why Bhakti Is Accessible to All</h3>
+          <p>Jnana yoga demands an extraordinarily refined intellect and the capacity to sustain abstract, non-dual contemplation — a capacity rare in ordinary human beings. Raja yoga requires years of disciplined practice to still the mind to the degree needed for deep meditation. Karma yoga, practised correctly, is powerful — but requires extraordinary selflessness that is itself the fruit of advanced spiritual development.</p>
+          <p>Bhakti, however, begins exactly where you are. It asks not for perfect minds or perfect bodies, not for great learning or great wealth. It asks only for a willing heart. The mother who prays with tears for her sick child, the musician who loses herself in a devotional melody, the pilgrim who walks barefoot to a distant shrine — all are practising Bhakti, each according to their nature and understanding.</p>
+
+          <h3>Practical Bhakti in Daily Life</h3>
+          <p>Paramahamsa Vishwananda often teaches that Bhakti is not something we do only in the temple or the meditation room. It is a continuous orientation of the heart. The question is not <em>when</em> to be devoted, but <em>how</em> to carry devotion into every moment — washing dishes, driving to work, speaking with a difficult colleague.</p>
+          <p>Some foundational practices that water the seed of Bhakti include: daily prayer (even five sincere minutes of heartfelt address to the Divine); japa (the quiet repetition of a divine name or mantra); kirtan (communal chanting, which bypasses the intellect and opens the heart directly); and satsang (keeping the company of other sincere seekers).</p>
+          <p>The path is not always dramatic. Most often it is quiet, patient, and deeply personal. But over time, the practitioner discovers what the scriptures promise: that devotion, once kindled, grows by its own fire. The more one loves, the more one is capable of love. This is the beautiful logic of Bhakti — a path that accelerates itself.</p>
+
+          <h3>The Destination Is the Journey</h3>
+          <p>Perhaps the most remarkable quality of Bhakti is that, unlike many other paths, the means and the end are identical. We practise love to arrive at Love. We offer devotion to become devotion. The path dissolves into the destination. This is what makes Bhakti not just a spiritual practice, but a way of being — available in every breath, every moment, to every willing soul.</p>
+        `
+      },
+      yoga1: {
+        cat: 'Yoga & Meditation',
+        title: 'How a Daily Sadhana Practice Can Transform Your Life',
+        author: 'Bhakti Marga Editorial', date: 'May 8, 2026', read: '6 min read',
+        img: 'Picture6.jpg',
+        body: `
+          <p>The word <em>sadhana</em> comes from Sanskrit, meaning "a means of accomplishing something" — and in the spiritual context, that something is the gradual refinement of the self toward greater awareness, love, and peace. A daily sadhana practice is, quite simply, a spiritual appointment you keep with yourself — and with the Divine — every single day.</p>
+          <p>It need not be long. It need not be elaborate. But it must be consistent. Consistency is the single most transformative ingredient in any spiritual practice. A river cuts through rock not by force, but by perseverance.</p>
+
+          <h3>The Power of the Early Morning</h3>
+          <p>The period known in Sanskrit as <em>Brahma muhurta</em> — roughly 90 minutes before sunrise — is considered by yogic tradition to be the most auspicious time for spiritual practice. At this hour, the collective mind of humanity is still quiet. The energy of the day has not yet gathered momentum. The subtle channels of the body are naturally more receptive.</p>
+          <p>Even twenty minutes of practice at this hour, done regularly, can produce changes that hours of scattered practice throughout the day cannot. The stillness of the early morning becomes a container for the sacred.</p>
+
+          <blockquote>"The morning practice does not just begin your day — it <em>becomes</em> your day. Everything that follows flows from those first quiet moments." — Bhakti Marga Teaching</blockquote>
+
+          <h3>Building Your Sadhana</h3>
+          <p>A balanced sadhana typically includes three elements: body (asana or gentle movement), breath (pranayama), and heart/mind (meditation, prayer, or japa). Begin simply. Choose one practice from each category and commit to it for forty days — the traditional period considered necessary in yogic tradition to establish a new pattern in body and mind.</p>
+          <p>Atma Kriya Yoga, taught through Bhakti Marga, offers a complete and integrated sadhana system. But even without formal initiation, one can begin: five sun salutations, ten minutes of alternate-nostril breathing, and the quiet repetition of a divine name constitute a complete and powerful morning sadhana.</p>
+          <p>The transformation will not always be dramatic or immediately visible. It arrives like spring — gradually, irresistibly, until one day you notice the world has become a different and more luminous place.</p>
+        `
+      },
+      wisdom1: {
+        cat: 'Wisdom',
+        title: 'Five Timeless Lessons from the Bhagavad Gita',
+        author: 'Bhakti Marga Editorial', date: 'April 28, 2026', read: '7 min read',
+        img: 'Picture3.jpg',
+        body: `
+          <p>The Bhagavad Gita — "The Song of the Divine" — is arguably the most beloved and widely studied spiritual text in human history. Spoken by Lord Sri Krishna to the warrior-prince Arjuna on the battlefield of Kurukshetra, its 700 verses contain a complete philosophy of life, action, devotion, and liberation.</p>
+          <p>Its teachings are not historical relics. They speak directly to the human condition in every age. Here are five of its most enduring lessons:</p>
+
+          <h3>1. You Are Not the Body — You Are the Self</h3>
+          <p>Krishna's very first teaching to the despairing Arjuna is a radical revelation: "The soul is never born, nor does it die at any time. It has not come into being, does not come into being, and will not come into being." The grief that paralyses Arjuna is based on a case of mistaken identity — he believes himself to be a mortal body, and his loved ones to be their mortal bodies. The Gita's first act is to correct this fundamental error.</p>
+
+          <h3>2. Act Without Attachment to Results</h3>
+          <p>Perhaps the most famous teaching of the Gita: <em>"You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions."</em> This is not a counsel of indifference — it is an invitation to act with full commitment and full skill, while releasing the compulsive need to control outcomes. Such action is simultaneously more effective and more peaceful.</p>
+
+          <blockquote>"Better is one's own dharma, though imperfectly performed, than the dharma of another well performed." — Bhagavad Gita 3.35</blockquote>
+
+          <h3>3. The Mind Is Both Friend and Enemy</h3>
+          <p>Krishna teaches that the untrained mind is the greatest obstacle on the path — scattering energy, creating imaginary problems, and preventing us from experiencing the peace that is already our nature. But the trained mind — turned toward the Divine, anchored in practice — becomes our greatest ally. The entire yoga tradition is essentially a technology for this training.</p>
+
+          <h3>4. Devotion Transcends All Other Paths</h3>
+          <p>Near the Gita's conclusion, Krishna makes a remarkable declaration: "Fix your mind on Me, be devoted to Me, worship Me, bow down to Me. So shall you come to Me. I promise you truly, for you are dear to Me." Of all the paths described — knowledge, action, renunciation — devotion is placed highest, because it most directly addresses the deepest longing of the human heart.</p>
+
+          <h3>5. The Universe Operates Through You, Not By You</h3>
+          <p>Again and again, Krishna points Arjuna toward the humbling and liberating recognition that we are instruments, not authors. The real actor in all events is the Divine. When we surrender the illusion of authorship, what remains is clarity, service, and peace — the hallmarks of a life truly lived in alignment with the Gita's wisdom.</p>
+        `
+      },
+      community1: {
+        cat: 'Community',
+        title: 'The Gift of Satsang: Why Spiritual Community Matters',
+        author: 'Bhakti Marga Editorial', date: 'April 17, 2026', read: '5 min read',
+        img: 'Picture2.jpg',
+        body: `
+          <p>The Sanskrit word <em>satsang</em> is composed of two roots: <em>sat</em> (truth, the real, the good) and <em>sanga</em> (company, association, community). Satsang, then, is the company of truth — or more practically, the gathering of sincere seekers who support one another on the spiritual path.</p>
+          <p>In an age of hyper-individualism, the idea that community is spiritually essential can seem strange. We imagine that spiritual progress is a solitary journey — the lone meditator, the hermit in the cave. And while solitary practice certainly has its place, the great teachers across all traditions have consistently emphasised the irreplaceable value of sangha.</p>
+
+          <h3>Why Community Accelerates Growth</h3>
+          <p>Human beings are, at their core, social creatures. Our nervous systems are wired for resonance — we literally entrain to the emotional and energetic states of those around us. This is why spending time with an anxious person makes us anxious, and spending time with a calm, joyful person tends to lift our own mood.</p>
+          <p>In a satsang environment, the collective intention of the group creates a field — an elevated spiritual atmosphere — that is genuinely greater than the sum of its individual parts. Practices that feel difficult in isolation become more natural and more powerful within the group field.</p>
+
+          <blockquote>"You cannot touch fire and remain cold. You cannot keep company with the devoted and remain unaffected." — Ancient Vaishnava Teaching</blockquote>
+
+          <h3>The Bhakti Marga Community</h3>
+          <p>The Bhakti Marga community spans over fifty countries, with local groups meeting regularly for kirtan, meditation, scripture study, and shared meals. These groups are not performances of spirituality — they are living laboratories of love, where the teachings are tested and embodied in real relationships.</p>
+          <p>Whether you join an online satsang from the other side of the world, or sit in a local group in your city, the experience of being held in a community of sincere seekers is unlike anything that solitary practice alone can offer. It is, as the masters say, one of God's greatest gifts.</p>
+        `
+      },
+      devotion2: {
+        cat: 'Devotion',
+        title: 'Kirtan: The Ancient Sound that Heals the Modern Soul',
+        author: 'Bhakti Marga Editorial', date: 'April 5, 2026', read: '5 min read',
+        img: 'Picture1.jpg',
+        body: `
+          <p>Walk into any Bhakti Marga kirtan and within minutes something extraordinary begins to happen. The walls of self-consciousness begin to soften. The tight knot of worry in the chest loosens. Strangers begin to sway and smile. Children dance. Elderly devotees clap with the enthusiasm of young people. Something ancient is being activated — something the rational mind cannot quite explain, but the heart recognises immediately.</p>
+          <p>Kirtan is the devotional practice of group chanting — the singing of divine names and sacred mantras, usually accompanied by harmonium, tabla, kartals (finger cymbals), and whatever instruments the community brings. It is simultaneously one of the oldest spiritual practices on earth and one of the fastest-growing in the contemporary West.</p>
+
+          <h3>The Science Behind the Sound</h3>
+          <p>Modern neuroscience has begun to document what yogis have known for millennia: synchronised group chanting produces measurable effects on the brain and nervous system. Studies show significant reductions in cortisol (the primary stress hormone), increases in oxytocin (the bonding and trust hormone), and activation of the parasympathetic nervous system — the "rest and restore" mode that is the physiological foundation of peace.</p>
+          <p>Beyond biochemistry, the Sanskrit mantras used in kirtan are understood in the tradition not merely as words with meanings, but as sound vibrations with intrinsic power. The divine name, vibrated with sincerity and love, is said to carry within it the presence of the Divine itself.</p>
+
+          <blockquote>"In this age, the simplest and most powerful path to God-realisation is the chanting of the Holy Name. One who chants with love will certainly be liberated." — Chaitanya Mahaprabhu</blockquote>
+
+          <h3>How to Begin</h3>
+          <p>You do not need to be musical to practise kirtan. You do not need to know Sanskrit, or understand the meanings of the mantras, or have any spiritual background at all. You need only show up and open your mouth. The practice does the rest. Many people report that their first kirtan was unlike anything they had ever experienced — an unexpected opening, a homecoming, a remembering.</p>
+          <p>Bhakti Marga communities worldwide hold regular kirtan events, many of them free and open to all. We warmly invite you to come, sit down, and let the sound find you.</p>
+        `
+      },
+      festivals1: {
+        cat: 'Festivals',
+        title: 'Just Love Festival 2026: A Preview of What\'s Coming',
+        author: 'Bhakti Marga Editorial', date: 'March 22, 2026', read: '4 min read',
+        img: 'Picture4.jpg',
+        body: `
+          <p>Every summer, the grounds of Shree Peetha Nilaya — the international ashram of Bhakti Marga in Springen, Germany — are transformed into something remarkable: a temporary city of devotion, where thousands of pilgrims from dozens of countries come together for three days of immersive spiritual experience.</p>
+          <p>The Just Love Festival is not a music festival with a spiritual veneer. It is a genuine pilgrimage — structured around the teachings and presence of Paramahamsa Vishwananda, designed to give participants a taste of what life looks like when love is placed at the very centre.</p>
+
+          <h3>What to Expect in 2026</h3>
+          <p>This year's festival runs from September 12–15 and is shaping up to be the most expansive in the event's history. The programme includes three full days of morning yoga and meditation sessions (suitable for all levels), live kirtan by renowned devotional musicians from India and Europe, fire ceremonies (havan/yajna) open to all attendees, intimate satsang sessions with Paramahamsa Vishwananda, workshops in Ayurveda, sacred art, and devotional cooking, and a dedicated children's programme so families can participate fully.</p>
+
+          <blockquote>"Just Love is not a concept. It is the lived experience of God's presence — available to everyone who comes with an open heart." — Paramahamsa Vishwananda</blockquote>
+
+          <h3>Practical Information</h3>
+          <p>The festival site is located in beautiful countryside near Frankfurt, with camping facilities available on the ashram grounds. A range of accommodation options from tents to guesthouses can be booked through the official Bhakti Marga events platform. Registration opens in June 2026 — places are limited, and previous years have sold out weeks in advance.</p>
+          <p>Whether you are a long-time devotee or have never attended a spiritual event of any kind, the Just Love Festival is designed to welcome you exactly as you are. Come as you are. Leave as something more.</p>
+        `
+      },
+      yoga2: {
+        cat: 'Yoga & Meditation',
+        title: 'Atma Kriya Yoga: The Science of Self-Realisation',
+        author: 'Bhakti Marga Editorial', date: 'March 10, 2026', read: '6 min read',
+        img: 'Picture5.jpg',
+        body: `
+          <p>In 2008, Paramahamsa Vishwananda was given by his own master, Mahavatar Babaji, a complete system of yoga designed for the modern seeker. This system — Atma Kriya Yoga — integrates techniques from across the yogic tradition into a single, coherent daily practice that accelerates spiritual development while remaining compatible with an ordinary householder life.</p>
+          <p>The name itself reveals its nature: <em>Atma</em> means "the Self" or "the soul"; <em>Kriya</em> means "action" or "technique"; <em>Yoga</em> means "union." Atma Kriya Yoga is, quite literally, the science of using specific techniques to guide the practitioner toward conscious union with their own deepest Self — and through that Self, with the Divine.</p>
+
+          <h3>The Structure of the Practice</h3>
+          <p>Atma Kriya Yoga is taught through a formal initiation process and structured course. The practice itself combines pranayama (breath techniques that work directly with the pranic energy system), specific kriyas (physical and energetic movements that clear and balance the subtle body), mantra (sacred sound repetition that purifies and focuses the mind), and deep meditation techniques drawn from the kriya yoga lineage.</p>
+          <p>The daily practice takes approximately 45–90 minutes and is ideally performed in the early morning. Practitioners typically report noticeable shifts within the first forty days: greater equanimity, reduction in stress and anxiety, increased clarity and creativity, and a growing sense of being supported and guided in daily life.</p>
+
+          <blockquote>"Atma Kriya is not just a yoga technique — it is a technology of love. It works from the inside out, revealing the divine nature that was always already present." — Paramahamsa Vishwananda</blockquote>
+
+          <h3>Who Is It For?</h3>
+          <p>Atma Kriya Yoga is suitable for practitioners of any background, tradition, or level of prior experience. It requires no prior knowledge of yoga or meditation, no particular religious belief, and no special physical capacity. The only requirements are sincerity, a willingness to commit to regular practice, and an open heart.</p>
+          <p>Courses are offered regularly through Bhakti Marga centres worldwide and online. The formal initiation creates a transmission that amplifies the power of the techniques — a living connection to the lineage that has preserved and transmitted these teachings across generations.</p>
+          <p>If you have been searching for a practice that goes beyond the physical, that addresses not just the body but the full spectrum of human being — body, mind, heart, and soul — Atma Kriya Yoga may be exactly what you have been looking for.</p>
+        `
+      }
+    };
+
+    function openArticle(key) {
+      const a = articles[key];
+      if (!a) return;
+      const el = document.getElementById('articleContent');
+      el.innerHTML = `
+        <p class="article-cat">${a.cat}</p>
+        <h1 class="article-title">${a.title.replace(/Bhakti/, '<em>Bhakti</em>').replace(/Divine/, '<em>Divine</em>')}</h1>
+        <div class="article-meta">
+          <span>${a.author}</span><span class="sep"></span>
+          <span>${a.date}</span><span class="sep"></span>
+          <span>${a.read}</span>
+        </div>
+        <img class="article-hero-img" src="${a.img}" alt="${a.title}" />
+        <div class="article-body">${a.body}</div>
+      `;
+      const overlay = document.getElementById('articleOverlay');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      overlay.scrollTop = 0;
+    }
+
+    function closeArticle() {
+      document.getElementById('articleOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('articleOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeArticle();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeArticle(); });
+
+    /* ── FILTER ── */
+    function filterPosts(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.blog-card').forEach(card => {
+        const match = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = match ? 'flex' : 'none';
+      });
+    }
+
+    /* ── REVEAL ── */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80);
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
