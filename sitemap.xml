@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Startseite -->
+  <url>
+    <loc>https://bhaktimarga.github.io/de/</loc>
+    <priority>1.00</priority>
+  </url>
+  
+  <!-- Hauptnavigation -->
+  <url>
+    <loc>https://bhaktimarga.github.io/de/ueber-uns</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/blog</loc>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/kontakt</loc>
+    <priority>0.70</priority>
+  </url>
+  
+  <!-- Der Pfad (Die 4 Säulen) -->
+  <url>
+    <loc>https://bhaktimarga.github.io/de/pfad/yoga-meditation</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/pfad/heiliges-wissen</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/pfad/rituale-puja</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/pfad/spirituelle-kunst</loc>
+    <priority>0.80</priority>
+  </url>
+  
+  <!-- Gemeinschaft & Events -->
+  <url>
+    <loc>https://bhaktimarga.github.io/de/gemeinschaft-finden</loc>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/events</loc>
+    <priority>0.75</priority>
+  </url>
+  
+  <!-- Rechtliches -->
+  <url>
+    <loc>https://bhaktimarga.github.io/de/datenschutz</loc>
+    <priority>0.30</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/nutzungsbedingungen</loc>
+    <priority>0.30</priority>
+  </url>
+  <url>
+    <loc>https://bhaktimarga.github.io/de/impressum</loc>
+    <priority>0.30</priority>
+  </url>
+</urlset>
